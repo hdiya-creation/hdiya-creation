@@ -2294,24 +2294,26 @@
           ================================================= */
 
           if (typeof fbq === "function") {
-            fbq("track", "Purchase", {
-              value: Number(total),
-              currency: "MAD",
-              content_type: "product",
-              contents: commande.map(function (item) {
-                return {
-                  id: item.produit,
-                  quantity: Number(item.quantite)
-                };
-              })
-            });
+          fbq("track", "Purchase", {
+            value: Number(total),
+            currency: "MAD",
+            content_type: "product",
+            contents: commande.map(function (item) {
+              return {
+                id: item.produit,
+                quantity: Number(item.quantite)
+              };
+            })
+          });
 
-            console.log("Meta Pixel Purchase envoyé :", {
-              value: Number(total),
-              currency: "MAD",
-              contents: commande
-            });
-          }
+          console.log("✅ PURCHASE ENVOYÉ À META", {
+            value: Number(total),
+            currency: "MAD",
+            contents: commande
+          });
+        } else {
+          console.error("❌ fbq غير موجود");
+        }
 
           bouton.textContent = "Commande envoyée ✓";
 
