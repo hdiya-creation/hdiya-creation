@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+
+  fbq('init', '1068985035935323');
+  fbq('track', 'PageView');
+  </script>
+
+  <noscript>
+    <img
+      height="1"
+      width="1"
+      style="display:none"
+      src="https://www.facebook.com/tr?id=1068985035935323&ev=PageView&noscript=1"
+    />
+  </noscript>
+  <!-- End Meta Pixel Code -->
+
+
+  
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pyjamas de confort</title>
@@ -2295,49 +2322,96 @@ function limiterQuantite(input) {
               return reponse.json();
             })
             .then((data) => {
-              if (data.success !== true && data.success !== "true") {
-                throw new Error("Envoi refusé");
-              }
+            if (data.success !== true && data.success !== "true") {
+              throw new Error("Envoi refusé");
+            }
 
-              bouton.textContent = "Commande envoyée ✓";
-              bouton.disabled = false;
+            /* =================================================
+              META PIXEL — PURCHASE
+              يتسجل فقط بعد نجاح إرسال الطلب
+            ================================================= */
 
-              commandeConfirmation.innerHTML = `
-                <strong>Merci ! Votre commande a bien été envoyée.</strong>
-                <br><br>
-                Total à payer : <strong>${total} DH</strong>
-              `;
-              commandeConfirmation.classList.add("active");
+            if (typeof fbq === "function") {
+              fbq("track", "Purchase", {
+                value: Number(total),
+                currency: "MAD",
 
-              // Réinitialisation du formulaire
-              commandeForm.reset();
+                content_type: "product",
 
-              produitsCommande.querySelectorAll(".ligne-produit").forEach((ligne, index) => {
-                if (index > 0) ligne.remove();
+                contents: commande.map(function (item) {
+                  return {
+                    id: item.produit,
+                    quantity: Number(item.quantite)
+                  };
+                })
               });
 
-              const premiereLigne = produitsCommande.querySelector(".ligne-produit");
-              if (premiereLigne) {
-                const selectProduit = premiereLigne.querySelector('select[name="produit[]"]');
-                const selectTaille = premiereLigne.querySelector('select[name="taille[]"]');
+              console.log("Meta Pixel Purchase envoyé :", {
+                value: Number(total),
+                currency: "MAD",
+                contents: commande
+              });
+            }
 
-                selectProduit.value = "";
-                selectTaille.innerHTML = '<option value="">Taille</option>';
-                selectTaille.disabled = true;
-                premiereLigne.dataset.mediaIndex = "0";
+            bouton.textContent = "Commande envoyée ✓";
+            bouton.disabled = false;
 
-                const zone = premiereLigne.querySelector(".media-commande");
-                if (zone) {
-                  zone.innerHTML = '<span class="media-placeholder">Choisir un produit</span>';
-                }
+            commandeConfirmation.innerHTML = `
+              <strong>Merci ! Votre commande a bien été envoyée.</strong>
+              <br><br>
+              Total à payer : <strong>${total} DH</strong>
+            `;
+
+            commandeConfirmation.classList.add("active");
+
+            // Réinitialisation du formulaire
+            commandeForm.reset();
+
+            produitsCommande.querySelectorAll(".ligne-produit").forEach((ligne, index) => {
+              if (index > 0) {
+                ligne.remove();
               }
+            });
 
-              calculerTotal();
-              commandeConfirmation.scrollIntoView({ behavior: "smooth", block: "center" });
+            const premiereLigne =
+              produitsCommande.querySelector(".ligne-produit");
 
-              // Le stock vient d'être décrémenté côté serveur -> on rafraîchit l'affichage
-              chargerStock();
-            })
+            if (premiereLigne) {
+              const selectProduit =
+                premiereLigne.querySelector('select[name="produit[]"]');
+
+              const selectTaille =
+                premiereLigne.querySelector('select[name="taille[]"]');
+
+              selectProduit.value = "";
+
+              selectTaille.innerHTML =
+                '<option value="">Taille</option>';
+
+              selectTaille.disabled = true;
+
+              premiereLigne.dataset.mediaIndex = "0";
+
+              const zone =
+                premiereLigne.querySelector(".media-commande");
+
+              if (zone) {
+                zone.innerHTML =
+                  '<span class="media-placeholder">Choisir un produit</span>';
+              }
+            }
+
+            calculerTotal();
+
+            commandeConfirmation.scrollIntoView({
+              behavior: "smooth",
+              block: "center"
+            });
+
+            // Le stock vient d'être décrémenté côté serveur
+            // -> on rafraîchit l'affichage
+            chargerStock();
+          })
             .catch(() => {
               bouton.textContent = "Confirmer ma commande";
               bouton.disabled = false;
