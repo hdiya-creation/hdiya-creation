@@ -1473,10 +1473,13 @@
     };
 
     const fraisLivraison = 25;
-    const EMAIL_COMMANDES = "wafaebusinessacount@gmail.com";
 
-    // URL du Google Apps Script Web App (voir instructions fournies séparément)
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqNeA53lAZJKNRTxHTItLG3LMUI4OWIYOKOqNLe_5Cc4gyfu6m3nYHE4XE9j5cBWs/exec";
+    // URL du Google Apps Script Web App. C'est la SEULE source de vérité
+    // pour le stock ET pour l'envoi d'email (voir Code.gs côté serveur).
+    // -> Le service externe "formsubmit.co" a été retiré : il créait un
+    //    deuxième système d'email indépendant qui pouvait échouer sans
+    //    lien avec le vrai statut de la commande.
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjukNKz6GW2t0eMRnZgQcGcqSN2BWIu7g5dpCLkZXGhZgsaGX_HfIVLKmw1iYBxOU/exec";
 
     /* =================================================
        2. RÉFÉRENCES DOM
@@ -1651,7 +1654,7 @@
     }
 
     /* =================================================
-       6. GESTION DU STOCK (nouveau)
+       6. GESTION DU STOCK
     ================================================= */
 
     // Rempli après chargement : { "Pyjama Bleu Ciel": { "M": 5, "L": 0 }, ... }
@@ -1676,136 +1679,136 @@
     // Seule source de vérité pour les tailles d'un produit : le stock.
     // Tant que le stock n'est pas chargé, on renvoie null (= "pas encore su").
     function taillesEnStockPour(produit) {
-  if (!stockCharge) {
-    return null;
-  }
+      if (!stockCharge) {
+        return null;
+      }
 
-  const stockProduit = stockDisponible[produit];
+      const stockProduit = stockDisponible[produit];
 
-  if (!stockProduit) {
-    return [];
-  }
+      if (!stockProduit) {
+        return [];
+      }
 
-  return Object.entries(stockProduit)
-    .filter(([taille, quantite]) => Number(quantite) > 0)
-    .map(([taille]) => taille);
-}
+      return Object.entries(stockProduit)
+        .filter(([taille, quantite]) => Number(quantite) > 0)
+        .map(([taille]) => taille);
+    }
 
     function chargerStock() {
-  return fetch(GOOGLE_SCRIPT_URL, {
-    method: "GET"
-  })
-    .then(async (response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
+      return fetch(GOOGLE_SCRIPT_URL, {
+        method: "GET"
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
 
-      const data = await response.json();
+          const data = await response.json();
 
-      console.log("Réponse stock :", data);
+          console.log("Réponse stock :", data);
 
-      // Accepte les deux formats :
-      // 1. [...]
-      // 2. { success: true, stock: [...] }
-      const lignes = Array.isArray(data)
-        ? data
-        : data.stock;
+          // Accepte les deux formats :
+          // 1. [...]
+          // 2. { success: true, stock: [...] }
+          const lignes = Array.isArray(data)
+            ? data
+            : data.stock;
 
-      if (!Array.isArray(lignes)) {
-        throw new Error("Format de stock invalide.");
-      }
+          if (!Array.isArray(lignes)) {
+            throw new Error("Format de stock invalide.");
+          }
 
-      stockDisponible = {};
+          stockDisponible = {};
 
-      lignes.forEach((ligne) => {
-        const produit = String(ligne.produit || "").trim();
-        const taille = String(ligne.taille || "").trim();
+          lignes.forEach((ligne) => {
+            const produit = String(ligne.produit || "").trim();
+            const taille = String(ligne.taille || "").trim();
 
-        const quantite = Number(ligne.quantite) || 0;
+            const quantite = Number(ligne.quantite) || 0;
 
-        if (!produit || !taille) return;
+            if (!produit || !taille) return;
 
-        if (!stockDisponible[produit]) {
-          stockDisponible[produit] = {};
-        }
+            if (!stockDisponible[produit]) {
+              stockDisponible[produit] = {};
+            }
 
-        stockDisponible[produit][taille] = quantite;
-      });
+            stockDisponible[produit][taille] = quantite;
+          });
 
-      stockCharge = true;
+          stockCharge = true;
 
-      console.log("Stock chargé :", stockDisponible);
+          console.log("Stock chargé :", stockDisponible);
 
-      appliquerStockSurLaPage();
-    })
-    .catch((erreur) => {
-      console.error("Impossible de charger le stock :", erreur);
+          appliquerStockSurLaPage();
+        })
+        .catch((erreur) => {
+          console.error("Impossible de charger le stock :", erreur);
 
-      stockCharge = false;
+          stockCharge = false;
 
-      // Afficher l'erreur au lieu de rester bloqué sur "Chargement..."
-      document.querySelectorAll(".tailles-disponibles strong").forEach((element) => {
-        element.textContent = "Stock indisponible";
-      });
-    });
-}
+          // Afficher l'erreur au lieu de rester bloqué sur "Chargement..."
+          document.querySelectorAll(".tailles-disponibles strong").forEach((element) => {
+            element.textContent = "Stock indisponible";
+          });
+        });
+    }
 
     function stockTotalProduit(nomProduit) {
       const tailles = stockDisponible[nomProduit];
       if (!tailles) return null; // pas d'info -> on ne bloque rien
       return Object.values(tailles).reduce((a, b) => a + b, 0);
     }
-   
 
 
-function actualiserMaximumQuantite(selectTaille) {
-  const ligne = selectTaille.closest(".ligne-produit");
+    function actualiserMaximumQuantite(selectTaille) {
+      const ligne = selectTaille.closest(".ligne-produit");
 
-  const inputQuantite =
-    ligne.querySelector('input[name="quantite[]"]');
+      const inputQuantite =
+        ligne.querySelector('input[name="quantite[]"]');
 
-  const option =
-    selectTaille.options[selectTaille.selectedIndex];
+      const option =
+        selectTaille.options[selectTaille.selectedIndex];
 
-  if (!option || !option.dataset.stock) {
-    inputQuantite.value = 1;
-    inputQuantite.min = 1;
-    inputQuantite.max = 1;
-    return;
-  }
+      if (!option || !option.dataset.stock) {
+        inputQuantite.value = 1;
+        inputQuantite.min = 1;
+        inputQuantite.max = 1;
+        return;
+      }
 
-  const stock = Number(option.dataset.stock);
+      const stock = Number(option.dataset.stock);
 
-  inputQuantite.min = 1;
-  inputQuantite.max = stock;
+      inputQuantite.min = 1;
+      inputQuantite.max = stock;
 
-  // Si la quantité actuelle dépasse le stock
-  if (Number(inputQuantite.value) > stock) {
-    inputQuantite.value = stock;
-  }
+      // Si la quantité actuelle dépasse le stock
+      if (Number(inputQuantite.value) > stock) {
+        inputQuantite.value = stock;
+      }
 
-  if (Number(inputQuantite.value) < 1) {
-    inputQuantite.value = 1;
-  }
-}
-function limiterQuantite(input) {
+      if (Number(inputQuantite.value) < 1) {
+        inputQuantite.value = 1;
+      }
+    }
 
-  const max = Number(input.max);
+    function limiterQuantite(input) {
 
-  let valeur = Number(input.value);
+      const max = Number(input.max);
 
-  if (!Number.isFinite(valeur) || valeur < 1) {
-    input.value = 1;
-    calculerTotal();
-    return;
-  }
+      let valeur = Number(input.value);
 
-  if (max > 0 && valeur > max) {
-    input.value = max;
-  }
+      if (!Number.isFinite(valeur) || valeur < 1) {
+        input.value = 1;
+        calculerTotal();
+        return;
+      }
 
-  calculerTotal();
-}
+      if (max > 0 && valeur > max) {
+        input.value = max;
+      }
+
+      calculerTotal();
+    }
 
 
     function appliquerStockSurLaPage() {
@@ -1867,116 +1870,116 @@ function limiterQuantite(input) {
     ================================================= */
 
     function actualiserProduit(selectProduit) {
-  const ligne = selectProduit.closest(".ligne-produit");
+      const ligne = selectProduit.closest(".ligne-produit");
 
-  if (!ligne) return;
+      if (!ligne) return;
 
-  const selectTaille = ligne.querySelector('select[name="taille[]"]');
-  const inputQuantite = ligne.querySelector('input[name="quantite[]"]');
+      const selectTaille = ligne.querySelector('select[name="taille[]"]');
+      const inputQuantite = ligne.querySelector('input[name="quantite[]"]');
 
-  if (!selectTaille || !inputQuantite) return;
+      if (!selectTaille || !inputQuantite) return;
 
-  const nomProduit = selectProduit.value;
-  const produit = catalogueProduits[nomProduit];
+      const nomProduit = selectProduit.value;
+      const produit = catalogueProduits[nomProduit];
 
-  const stockProduit = stockDisponible[nomProduit] || {};
+      const stockProduit = stockDisponible[nomProduit] || {};
 
-  // Garder la taille sélectionnée si elle existe encore
-  const tailleActuelle = selectTaille.value;
+      // Garder la taille sélectionnée si elle existe encore
+      const tailleActuelle = selectTaille.value;
 
-  // Reset
-  selectTaille.innerHTML = '<option value="">Taille</option>';
-  selectTaille.disabled = true;
+      // Reset
+      selectTaille.innerHTML = '<option value="">Taille</option>';
+      selectTaille.disabled = true;
 
-  inputQuantite.value = 1;
-  inputQuantite.min = 1;
-  inputQuantite.max = 1;
+      inputQuantite.value = 1;
+      inputQuantite.min = 1;
+      inputQuantite.max = 1;
 
-  ligne.dataset.mediaIndex = "0";
+      ligne.dataset.mediaIndex = "0";
 
-  // Aucun produit
-  if (!nomProduit || !produit) {
-    afficherMediaCommande(ligne);
-    calculerTotal();
-    return;
-  }
+      // Aucun produit
+      if (!nomProduit || !produit) {
+        afficherMediaCommande(ligne);
+        calculerTotal();
+        return;
+      }
 
-  // Stock pas encore chargé
-  if (!stockCharge) {
-    selectTaille.innerHTML =
-      '<option value="">Chargement...</option>';
+      // Stock pas encore chargé
+      if (!stockCharge) {
+        selectTaille.innerHTML =
+          '<option value="">Chargement...</option>';
 
-    selectTaille.disabled = true;
+        selectTaille.disabled = true;
 
-    afficherMediaCommande(ligne);
-    calculerTotal();
+        afficherMediaCommande(ligne);
+        calculerTotal();
 
-    return;
-  }
+        return;
+      }
 
-  // Produit absent du stock
-  if (!stockProduit || Object.keys(stockProduit).length === 0) {
-    selectTaille.innerHTML =
-      '<option value="">Aucune taille disponible</option>';
+      // Produit absent du stock
+      if (!stockProduit || Object.keys(stockProduit).length === 0) {
+        selectTaille.innerHTML =
+          '<option value="">Aucune taille disponible</option>';
 
-    selectTaille.disabled = true;
+        selectTaille.disabled = true;
 
-    afficherMediaCommande(ligne);
-    calculerTotal();
+        afficherMediaCommande(ligne);
+        calculerTotal();
 
-    return;
-  }
+        return;
+      }
 
-  // Tailles disponibles selon le stock
-  const taillesDispo = trierTailles(
-    Object.entries(stockProduit)
-      .filter(([taille, quantite]) => Number(quantite) > 0)
-      .map(([taille]) => taille)
-  );
+      // Tailles disponibles selon le stock
+      const taillesDispo = trierTailles(
+        Object.entries(stockProduit)
+          .filter(([taille, quantite]) => Number(quantite) > 0)
+          .map(([taille]) => taille)
+      );
 
-  // Ajouter les tailles
-  taillesDispo.forEach((taille) => {
+      // Ajouter les tailles
+      taillesDispo.forEach((taille) => {
 
-    const quantiteStock = Number(stockProduit[taille]) || 0;
+        const quantiteStock = Number(stockProduit[taille]) || 0;
 
-    const option = document.createElement("option");
+        const option = document.createElement("option");
 
-    option.value = taille;
+        option.value = taille;
 
-    // ============================================
-    // IMPORTANT :
-    // Le client voit uniquement "M", "L", "XL"
-    // ============================================
-    option.textContent = taille;
+        // ============================================
+        // IMPORTANT :
+        // Le client voit uniquement "M", "L", "XL"
+        // ============================================
+        option.textContent = taille;
 
-    // ============================================
-    // La quantité reste cachée pour le JavaScript
-    // ============================================
-    option.dataset.stock = quantiteStock;
+        // ============================================
+        // La quantité reste cachée pour le JavaScript
+        // ============================================
+        option.dataset.stock = quantiteStock;
 
-    selectTaille.appendChild(option);
-  });
+        selectTaille.appendChild(option);
+      });
 
-  // Restaurer la taille précédente
-  if (
-    tailleActuelle &&
-    taillesDispo.includes(tailleActuelle)
-  ) {
-    selectTaille.value = tailleActuelle;
-  }
+      // Restaurer la taille précédente
+      if (
+        tailleActuelle &&
+        taillesDispo.includes(tailleActuelle)
+      ) {
+        selectTaille.value = tailleActuelle;
+      }
 
-  // Activer / désactiver le choix de taille
-  selectTaille.disabled = taillesDispo.length === 0;
+      // Activer / désactiver le choix de taille
+      selectTaille.disabled = taillesDispo.length === 0;
 
-  // Mettre à jour la quantité maximale
-  actualiserMaximumQuantite(selectTaille);
+      // Mettre à jour la quantité maximale
+      actualiserMaximumQuantite(selectTaille);
 
-  // Afficher la galerie
-  afficherMediaCommande(ligne);
+      // Afficher la galerie
+      afficherMediaCommande(ligne);
 
-  // Recalculer le total
-  calculerTotal();
-}
+      // Recalculer le total
+      calculerTotal();
+    }
 
     function ajouterProduit() {
       const ligne = document.createElement("div");
@@ -2075,25 +2078,25 @@ function limiterQuantite(input) {
 
     document.addEventListener("change", function (event) {
 
-  // Changement de produit
-  if (event.target.matches('select[name="produit[]"]')) {
-    actualiserProduit(event.target);
-    return;
-  }
+      // Changement de produit
+      if (event.target.matches('select[name="produit[]"]')) {
+        actualiserProduit(event.target);
+        return;
+      }
 
-  // Changement de taille
-  if (event.target.matches('select[name="taille[]"]')) {
-    actualiserMaximumQuantite(event.target);
-    calculerTotal();
-    return;
-  }
+      // Changement de taille
+      if (event.target.matches('select[name="taille[]"]')) {
+        actualiserMaximumQuantite(event.target);
+        calculerTotal();
+        return;
+      }
 
-  // Changement de quantité
-  if (event.target.matches('input[name="quantite[]"]')) {
-    limiterQuantite(event.target);
-    calculerTotal();
-  }
-});
+      // Changement de quantité
+      if (event.target.matches('input[name="quantite[]"]')) {
+        limiterQuantite(event.target);
+        calculerTotal();
+      }
+    });
 
     document.addEventListener("input", function (event) {
       if (event.target.matches('input[name="quantite[]"]')) {
@@ -2170,14 +2173,18 @@ function limiterQuantite(input) {
     });
 
     /* =================================================
-       14. ENVOI VERS GOOGLE SHEETS (vérifie + décrémente le stock)
+       14. ENVOI DE LA COMMANDE VERS GOOGLE APPS SCRIPT
+       ------------------------------------------------
+       Un seul appel réseau, une seule réponse faisant foi :
+       - vérifie ET décrémente le stock côté serveur
+       - enregistre la commande dans Google Sheets
+       - envoie l'email (avec repli automatique si besoin,
+         voir Code.gs)
+       Le HTML n'a plus besoin d'un deuxième service d'email :
+       il se contente d'afficher le résultat renvoyé ici.
     ================================================= */
 
-    function envoyerVersGoogleSheets(commande, infosClient, sousTotal, total, note) {
-      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.indexOf("COLLE_ICI") !== -1) {
-        console.warn("GOOGLE_SCRIPT_URL non configurée : commande non envoyée à Google Sheets.");
-        return Promise.resolve({ success: true, ignore: true });
-      }
+    function envoyerCommande(commande, infosClient, sousTotal, total, note) {
 
       const donneesSheet = {
         nom: infosClient.nom,
@@ -2198,17 +2205,11 @@ function limiterQuantite(input) {
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(donneesSheet)
       })
-        .then((r) => r.json())
-        .catch((erreur) => {
-          console.warn("Échec de l'envoi vers Google Sheets :", erreur);
-          // Si Sheets est injoignable, on considère que l'on ne peut pas
-          // garantir le stock : on bloque la commande par sécurité.
-          return { success: false, error: "Impossible de vérifier le stock pour le moment." };
-        });
+        .then((r) => r.json());
     }
 
     /* =================================================
-       15. ENVOI DE LA COMMANDE
+       15. SOUMISSION DU FORMULAIRE
     ================================================= */
 
     commandeForm.addEventListener("submit", function (event) {
@@ -2266,162 +2267,134 @@ function limiterQuantite(input) {
       const note = commandeNote ? commandeNote.value.trim() : "";
 
       const bouton = commandeForm.querySelector(".bouton-commande");
-      bouton.textContent = "Vérification du stock...";
+      bouton.textContent = "Envoi en cours...";
       bouton.disabled = true;
 
-      // 1. On vérifie ET décrémente le stock côté serveur (Apps Script).
-      //    Si ça échoue (stock insuffisant), on n'envoie PAS l'email.
-      envoyerVersGoogleSheets(commande, infosClient, sousTotal, total, note)
-        .then((resultatStock) => {
-          if (!resultatStock.success) {
+      envoyerCommande(commande, infosClient, sousTotal, total, note)
+        .then((resultat) => {
+
+          bouton.disabled = false;
+
+          // La commande n'a pas pu être traitée (stock insuffisant,
+          // information manquante, erreur serveur...).
+          if (!resultat || !resultat.success) {
             bouton.textContent = "Confirmer ma commande";
-            bouton.disabled = false;
-            alert(resultatStock.error || "Stock insuffisant pour un des produits. Merci de réessayer.");
-            chargerStock(); // pour rafraîchir l'affichage avec les quantités réelles
+            alert(
+              (resultat && resultat.error) ||
+              "Une erreur est survenue. Merci de vérifier votre commande et de réessayer."
+            );
+            chargerStock(); // rafraîchit l'affichage avec les quantités réelles
             return;
           }
 
-          // 2. Stock OK -> résumé texte pour l'e-mail
-          let resumeCommande = "NOUVELLE COMMANDE — PYJAMA LUX\n\n";
-          resumeCommande += "Client : " + infosClient.nom + "\n";
-          resumeCommande += "Téléphone : " + infosClient.telephone + "\n";
-          resumeCommande += "Ville : " + infosClient.ville + "\n";
-          resumeCommande += "Adresse : " + infosClient.adresse + "\n\n";
-          resumeCommande += "PRODUITS :\n";
+          /* =================================================
+             META PIXEL — PURCHASE
+             Se déclenche uniquement une fois la commande
+             confirmée côté serveur (stock décrémenté + enregistrée).
+          ================================================= */
 
-          commande.forEach((item, index) => {
-            resumeCommande += `${index + 1}. ${item.produit} | Taille : ${item.taille} | Quantité : ${item.quantite} | ${item.montant} DH\n`;
-          });
+          if (typeof fbq === "function") {
+            fbq("track", "Purchase", {
+              value: Number(total),
+              currency: "MAD",
+              content_type: "product",
+              contents: commande.map(function (item) {
+                return {
+                  id: item.produit,
+                  quantity: Number(item.quantite)
+                };
+              })
+            });
 
-          resumeCommande += "\nSous-total : " + sousTotal + " DH\n";
-          resumeCommande += "Livraison : " + fraisLivraison + " DH\n";
-          resumeCommande += "TOTAL À PAYER : " + total + " DH";
-
-          if (note) {
-            resumeCommande += "\n\nNote du client :\n" + note;
+            console.log("Meta Pixel Purchase envoyé :", {
+              value: Number(total),
+              currency: "MAD",
+              contents: commande
+            });
           }
 
-          const donnees = new FormData(commandeForm);
-          donnees.append("_subject", "Nouvelle commande — Pyjama Lux");
-          donnees.append("_template", "table");
-          donnees.append("_captcha", "false");
-          donnees.append("Résumé de la commande", resumeCommande);
-          donnees.append("Sous-total", sousTotal + " DH");
-          donnees.append("Livraison", fraisLivraison + " DH");
-          donnees.append("Total à payer", total + " DH");
+          bouton.textContent = "Commande envoyée ✓";
 
-          bouton.textContent = "Envoi en cours...";
-
-          fetch("https://formsubmit.co/ajax/" + EMAIL_COMMANDES, {
-            method: "POST",
-            headers: { "Accept": "application/json" },
-            body: donnees
-          })
-            .then((reponse) => {
-              if (!reponse.ok) throw new Error("Erreur serveur");
-              return reponse.json();
-            })
-            .then((data) => {
-            if (data.success !== true && data.success !== "true") {
-              throw new Error("Envoi refusé");
-            }
-
-            /* =================================================
-              META PIXEL — PURCHASE
-              يتسجل فقط بعد نجاح إرسال الطلب
-            ================================================= */
-
-            if (typeof fbq === "function") {
-              fbq("track", "Purchase", {
-                value: Number(total),
-                currency: "MAD",
-
-                content_type: "product",
-
-                contents: commande.map(function (item) {
-                  return {
-                    id: item.produit,
-                    quantity: Number(item.quantite)
-                  };
-                })
-              });
-
-              console.log("Meta Pixel Purchase envoyé :", {
-                value: Number(total),
-                currency: "MAD",
-                contents: commande
-              });
-            }
-
-            bouton.textContent = "Commande envoyée ✓";
-            bouton.disabled = false;
-
+          // Le stock et l'enregistrement de la commande sont TOUJOURS
+          // confirmés ici (resultat.success === true). Seul l'envoi de
+          // l'email de notification peut, rarement, échouer côté serveur
+          // (voir resultat.email) : dans ce cas la commande reste malgré
+          // tout bien enregistrée, on l'indique simplement au client.
+          if (resultat.email) {
             commandeConfirmation.innerHTML = `
               <strong>Merci ! Votre commande a bien été envoyée.</strong>
               <br><br>
               Total à payer : <strong>${total} DH</strong>
             `;
+          } else {
+            commandeConfirmation.innerHTML = `
+              <strong>Merci ! Votre commande a bien été enregistrée.</strong>
+              <br><br>
+              Total à payer : <strong>${total} DH</strong>
+              <br><br>
+              Nous vous contacterons directement pour confirmer les détails.
+            `;
+          }
 
-            commandeConfirmation.classList.add("active");
+          commandeConfirmation.classList.add("active");
 
-            // Réinitialisation du formulaire
-            commandeForm.reset();
+          // Réinitialisation du formulaire
+          commandeForm.reset();
 
-            produitsCommande.querySelectorAll(".ligne-produit").forEach((ligne, index) => {
-              if (index > 0) {
-                ligne.remove();
-              }
-            });
-
-            const premiereLigne =
-              produitsCommande.querySelector(".ligne-produit");
-
-            if (premiereLigne) {
-              const selectProduit =
-                premiereLigne.querySelector('select[name="produit[]"]');
-
-              const selectTaille =
-                premiereLigne.querySelector('select[name="taille[]"]');
-
-              selectProduit.value = "";
-
-              selectTaille.innerHTML =
-                '<option value="">Taille</option>';
-
-              selectTaille.disabled = true;
-
-              premiereLigne.dataset.mediaIndex = "0";
-
-              const zone =
-                premiereLigne.querySelector(".media-commande");
-
-              if (zone) {
-                zone.innerHTML =
-                  '<span class="media-placeholder">Choisir un produit</span>';
-              }
+          produitsCommande.querySelectorAll(".ligne-produit").forEach((ligne, index) => {
+            if (index > 0) {
+              ligne.remove();
             }
-
-            calculerTotal();
-
-            commandeConfirmation.scrollIntoView({
-              behavior: "smooth",
-              block: "center"
-            });
-
-            // Le stock vient d'être décrémenté côté serveur
-            // -> on rafraîchit l'affichage
-            chargerStock();
-          })
-            .catch((erreur) => {
-            console.error("Erreur FormSubmit :", erreur);
-
-            bouton.textContent = "Confirmer ma commande";
-            bouton.disabled = false;
-
-            alert(
-              "Une erreur est survenue lors de l'envoi. Ouvre la console du navigateur avec F12 pour voir le détail."
-            );
           });
+
+          const premiereLigne =
+            produitsCommande.querySelector(".ligne-produit");
+
+          if (premiereLigne) {
+            const selectProduit =
+              premiereLigne.querySelector('select[name="produit[]"]');
+
+            const selectTaille =
+              premiereLigne.querySelector('select[name="taille[]"]');
+
+            selectProduit.value = "";
+
+            selectTaille.innerHTML =
+              '<option value="">Taille</option>';
+
+            selectTaille.disabled = true;
+
+            premiereLigne.dataset.mediaIndex = "0";
+
+            const zone =
+              premiereLigne.querySelector(".media-commande");
+
+            if (zone) {
+              zone.innerHTML =
+                '<span class="media-placeholder">Choisir un produit</span>';
+            }
+          }
+
+          calculerTotal();
+
+          commandeConfirmation.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+
+          // Le stock vient d'être décrémenté côté serveur
+          // -> on rafraîchit l'affichage
+          chargerStock();
+        })
+        .catch((erreur) => {
+          console.error("Erreur lors de l'envoi de la commande :", erreur);
+
+          bouton.textContent = "Confirmer ma commande";
+          bouton.disabled = false;
+
+          alert(
+            "Une erreur réseau est survenue lors de l'envoi. Vérifiez votre connexion internet et réessayez."
+          );
         });
     });
 
