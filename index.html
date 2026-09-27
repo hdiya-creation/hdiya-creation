@@ -2293,27 +2293,34 @@
              confirmée côté serveur (stock décrémenté + enregistrée).
           ================================================= */
 
+          /* META PIXEL — PURCHASE */
           if (typeof fbq === "function") {
-          fbq("track", "Purchase", {
-            value: Number(total),
-            currency: "MAD",
-            content_type: "product",
-            contents: commande.map(function (item) {
-              return {
-                id: item.produit,
-                quantity: Number(item.quantite)
-              };
-            })
-          });
 
-          console.log("✅ PURCHASE ENVOYÉ À META", {
-            value: Number(total),
-            currency: "MAD",
-            contents: commande
-          });
-        } else {
-          console.error("❌ fbq غير موجود");
-        }
+            const tauxMAD_AED = 2.50;
+            const valeurAED = Number(total) / tauxMAD_AED;
+
+            fbq("track", "Purchase", {
+              value: Number(valeurAED.toFixed(2)),
+              currency: "AED",
+              content_type: "product",
+              contents: commande.map(function (item) {
+                return {
+                  id: item.produit,
+                  quantity: Number(item.quantite)
+                };
+              })
+            });
+
+            console.log("✅ PURCHASE ENVOYÉ À META", {
+              totalClientMAD: Number(total),
+              valeurMetaAED: Number(valeurAED.toFixed(2)),
+              currency: "AED",
+              contents: commande
+            });
+
+          } else {
+            console.error("❌ fbq غير موجود");
+}
 
           bouton.textContent = "Commande envoyée ✓";
 
