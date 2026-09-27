@@ -2412,11 +2412,16 @@ function limiterQuantite(input) {
             // -> on rafraîchit l'affichage
             chargerStock();
           })
-            .catch(() => {
-              bouton.textContent = "Confirmer ma commande";
-              bouton.disabled = false;
-              alert("Le stock a bien été réservé, mais l'envoi de l'e-mail a échoué. Contactez-nous pour confirmer votre commande.");
-            });
+            .catch((erreur) => {
+            console.error("Erreur FormSubmit :", erreur);
+
+            bouton.textContent = "Confirmer ma commande";
+            bouton.disabled = false;
+
+            alert(
+              "Une erreur est survenue lors de l'envoi. Ouvre la console du navigateur avec F12 pour voir le détail."
+            );
+          });
         });
     });
 
