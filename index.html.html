@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pyjamas de confort</title>
+
+  <link rel="icon" type="image/png" href="hdiya.png">
+  <meta name="description" content="Pyjamas féminins élégants et confortables">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Karla:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    /* =====================================================
+       1. VARIABLES
+    ===================================================== */
+    :root {
+      --mauve: #6F536B;
+      --mauve-fonce: #4E394B;
+      --mauve-clair: #9C7894;
+
+      --rose: #D9A7BD;
+      --rose-clair: #E8C8D6;
+
+      --creme: #FFF8FA;
+      --creme-clair: #FDF1F6;
+
+      --trait: rgba(111, 83, 107, .18);
+
+      --serif: "Bodoni Moda", Georgia, "Times New Roman", serif;
+      --sans: "Karla", "Helvetica Neue", Arial, sans-serif;
+
+      --rayure-claire: repeating-linear-gradient(90deg, rgba(111, 83, 107, .09) 0 1px, transparent 1px 10px);
+      --rayure-sombre: repeating-linear-gradient(90deg, rgba(255, 248, 250, .10) 0 1px, transparent 1px 10px);
+    }
+
+    /* Tailles disponibles sur les produits */
+.tailles-disponibles {
+  margin-top: 6px;
+  margin-bottom: 4px;
+  font-size: .82rem;
+  color: rgba(111, 83, 107, .72);
+}
+
+.tailles-disponibles strong {
+  color: var(--mauve);
+  font-weight: 600;
+}
+
+    /* Badge rupture de stock (nouveau) */
+.badge-rupture {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: .8rem;
+  font-weight: 600;
+  color: #a33;
+  background: rgba(170, 51, 51, .08);
+  border-radius: 999px;
+  padding: .25rem .7rem;
+}
+
+    /* =====================================================
+       2. RESET
+    ===================================================== */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--creme);
+      color: var(--mauve);
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img, svg { max-width: 100%; }
+    a { color: inherit; }
+    button, input { font: inherit; }
+
+    .enveloppe {
+      width: min(1160px, 92vw);
+      margin-inline: auto;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--rose);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* Accessibilité : lien d'évitement */
+    .saut { position: absolute; left: -9999px; }
+    .saut:focus {
+      left: 12px;
+      top: 12px;
+      position: fixed;
+      z-index: 9999;
+      background: var(--mauve);
+      color: var(--creme);
+      padding: .7rem 1rem;
+    }
+
+    /* =====================================================
+       3. HEADER
+    ===================================================== */
+    .barre {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 248, 250, .96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--trait);
+    }
+
+    .barre .enveloppe {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-height: 70px;
+    }
+
+    .marque {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      letter-spacing: .01em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .logo-header {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .marque span {
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    .boutons-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-left: auto;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 1.9rem;
+      margin-left: auto;
+      font-size: .92rem;
+    }
+
+    .nav a {
+      text-decoration: none;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s ease, color .2s ease;
+    }
+
+    .nav a:hover {
+      border-bottom-color: var(--mauve);
+      color: var(--rose);
+    }
+
+    /* Icône recherche */
+    .icone-recherche {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--mauve);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color .2s ease, transform .2s ease;
+    }
+
+    .icone-recherche svg {
+      width: 21px;
+      height: 21px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icone-recherche:hover {
+      color: var(--rose);
+      transform: scale(1.08);
+    }
+
+    /* Barre de recherche */
+    .zone-recherche {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      display: none;
+      background: var(--creme);
+      border-bottom: 1px solid var(--trait);
+      padding: 20px;
+    }
+
+    .zone-recherche.active { display: block; }
+
+    .recherche-interne {
+      width: min(700px, 92vw);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .recherche-interne input {
+      flex: 1;
+      height: 48px;
+      padding: 0 18px;
+      border: 1px solid var(--trait);
+      border-radius: 999px;
+      background: white;
+      color: var(--mauve);
+      outline: none;
+    }
+
+    .recherche-interne input:focus { border-color: var(--rose); }
+    .recherche-interne input::placeholder { color: rgba(111, 83, 107, .45); }
+
+    #fermerRecherche {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--mauve);
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    /* =====================================================
+       4. BOUTONS
+    ===================================================== */
+    .passepoil {
+      display: inline-block;
+      padding: .85rem 1.7rem;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 3px var(--creme), inset 0 0 0 4px currentColor;
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: .95rem;
+      text-decoration: none;
+      background: none;
+      color: var(--mauve);
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+    }
+
+    .passepoil:hover {
+      background: var(--mauve);
+      color: var(--creme);
+      box-shadow: inset 0 0 0 3px var(--mauve), inset 0 0 0 4px var(--creme);
+    }
+
+    .passepoil.clair {
+      color: var(--rose);
+      box-shadow: inset 0 0 0 3px var(--mauve-fonce), inset 0 0 0 4px currentColor;
+    }
+
+    .passepoil.clair:hover {
+      background: var(--rose);
+      color: var(--mauve-fonce);
+      box-shadow: inset 0 0 0 3px var(--rose), inset 0 0 0 4px var(--mauve-fonce);
+    }
+
+    .passepoil:disabled { opacity: .6; cursor: default; }
+
+    .ajouter-produit {
+      display: inline-block;
+      margin-top: .4rem;
+      padding: .6rem 1.1rem;
+      border: 1px dashed var(--mauve);
+      border-radius: 999px;
+      background: none;
+      color: var(--mauve);
+      font-size: .88rem;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .ajouter-produit:hover {
+      background: var(--mauve);
+      color: var(--creme);
+    }
+
+    /* =====================================================
+       5. HERO
+    ===================================================== */
+    .hero {
+      position: relative;
+      background: var(--mauve-fonce);
+      color: var(--creme);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--rayure-sombre);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 70vw;
+      height: 70vw;
+      max-width: 760px;
+      max-height: 760px;
+      right: -18vw;
+      top: -24vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 167, 189, .22), transparent 62%);
+      pointer-events: none;
+    }
+
+    .hero .enveloppe {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 3.5rem;
+      align-items: center;
+      padding: 5.5rem 0 5rem;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.9rem, 6.4vw, 4.9rem);
+      line-height: 1.03;
+      margin: 0 0 1.4rem;
+      letter-spacing: -.01em;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--rose-clair);
+    }
+
+    .hero p.intro {
+      max-width: 44ch;
+      font-weight: 300;
+      font-size: 1.08rem;
+      color: rgba(255, 248, 250, .82);
+      margin: 0 0 2.2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.6rem;
+      align-items: center;
+    }
+
+    .hero-actions small {
+      color: rgba(255, 248, 250, .65);
+      font-size: .86rem;
+    }
+
+    .ligne-sup {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.02rem;
+      color: var(--rose);
+      margin: 0 0 1rem;
+    }
+
+    .visuel { display: flex; justify-content: center; }
+
+    .visuel svg,
+    .visuel img {
+      width: min(400px, 100%);
+      height: auto;
+      filter: drop-shadow(0 26px 44px rgba(217, 167, 189, .30));
+    }
+
+    /* Animation d'entrée */
+    @media (prefers-reduced-motion: no-preference) {
+      .anim {
+        opacity: 0;
+        transform: translateY(14px);
+        animation: monte .9s cubic-bezier(.2, .7, .3, 1) forwards;
+      }
+      .d1 { animation-delay: .18s; }
+      .d2 { animation-delay: .30s; }
+      .d3 { animation-delay: .42s; }
+
+      @keyframes monte {
+        to { opacity: 1; transform: none; }
+      }
+    }
+
+    /* =====================================================
+       6. BANDEAU
+    ===================================================== */
+    .bandeau {
+      background: var(--mauve);
+      color: rgba(255, 248, 250, .92);
+      font-size: .88rem;
+      letter-spacing: .02em;
+    }
+
+    .bandeau .enveloppe {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .6rem 2rem;
+      padding: .95rem 0;
+    }
+
+    /* =====================================================
+       7. SECTIONS GÉNÉRIQUES
+    ===================================================== */
+    section { padding: 5.5rem 0; }
+
+    h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2rem, 4vw, 2.9rem);
+      line-height: 1.12;
+      margin: 0 0 1rem;
+    }
+
+    .chapeau {
+      max-width: 56ch;
+      color: rgba(111, 83, 107, .75);
+      font-weight: 300;
+      margin: 0 0 3rem;
+    }
+
+    
+
+    /* =====================================================
+       9. COLLECTION (fiches produit)
+    ===================================================== */
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.4rem;
+    }
+
+    .piece { display: flex; flex-direction: column; cursor: pointer; }
+
+    .piece .fond {
+      aspect-ratio: 3 / 4;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--trait);
+    }
+
+    .f1 { background: #70556F; }
+    .f2 { background: #C9A8BA; }
+    .f3 { background: #9C7894; }
+
+    .piece .fond svg { width: 56%; }
+
+    .piece .titre {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin: 1rem 0 .2rem;
+    }
+
+    .piece h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    .piece .prix { font-size: .98rem; white-space: nowrap; }
+
+    .piece p {
+      margin: 0;
+      font-size: .9rem;
+      font-weight: 300;
+      color: rgba(111, 83, 107, .70);
+    }
+
+    /* Galerie sur une fiche produit (.piece) */
+    .galerie-produit {
+      position: relative;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .media-produit {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border-radius: 4px;
+      background: var(--creme-clair);
+      border: 1px solid var(--trait);
+    }
+
+    .media-produit img,
+    .media-produit video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .fleche-produit {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .88);
+      color: var(--mauve);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 0;
+      margin: 0;
+    }
+
+    .fleche-produit.gauche { left: 8px; }
+    .fleche-produit.droite { right: 8px; }
+
+    /* =====================================================
+       10. CITATION
+    ===================================================== */
+    .citation {
+      background: var(--mauve);
+      color: var(--creme);
+      text-align: center;
+    }
+
+    .citation blockquote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.5rem, 3.3vw, 2.2rem);
+      line-height: 1.4;
+      max-width: 24ch;
+      margin: 0 auto 1.2rem;
+    }
+
+    .citation cite {
+      font-style: normal;
+      font-size: .88rem;
+      color: rgba(255, 248, 250, .62);
+    }
+
+    /* =====================================================
+       11. COMMANDE (formulaire)
+    ===================================================== */
+    .commande {
+      background: var(--creme-clair);
+      border-top: 1px solid var(--trait);
+    }
+
+    .form-commande {
+      width: min(700px, 100%);
+      margin: 2.5rem auto 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    .champ {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+
+    .champ label { font-size: .9rem; font-weight: 500; }
+    .champ label small { font-weight: 400; color: rgba(111, 83, 107, .6); }
+
+    .champ input,
+    .champ select,
+    .champ textarea {
+      width: 100%;
+      padding: .9rem 1rem;
+      border: 1px solid var(--trait);
+      border-radius: 10px;
+      background: white;
+      color: var(--mauve);
+      outline: none;
+    }
+
+    .champ input:focus,
+    .champ select:focus,
+    .champ textarea:focus { border-color: var(--rose); }
+
+    .champ small { font-size: .78rem; color: rgba(111, 83, 107, .55); }
+
+    .champ textarea { min-height: 110px; resize: vertical; }
+
+    /* Adresse en pleine largeur (4e champ) */
+    .champ:nth-child(4) { grid-column: 1 / -1; }
+
+    /* Bloc "Produits" en pleine largeur */
+    .champ:has(#produitsCommande) { grid-column: 1 / -1; }
+
+    /* --- Une ligne produit du formulaire --- */
+    .ligne-produit {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 100px 75px 40px;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .ligne-produit select,
+    .ligne-produit input {
+      width: 100%;
+      height: 46px;
+      box-sizing: border-box;
+    }
+
+    .ligne-produit select { padding: 0 10px; font-size: 14px; min-width: 0; }
+    .ligne-produit input[type="number"] { padding: 0 5px; text-align: center; }
+
+    .supprimer-produit {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--trait);
+      border-radius: 50%;
+      background: white;
+      color: var(--mauve);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    /* --- Mini-galerie dans une ligne du formulaire --- */
+    .galerie-commande {
+      position: relative;
+      width: 100%;
+      height: 46px;
+    }
+
+    .media-commande {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--trait);
+      background: var(--creme-clair);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .media-commande img,
+    .media-commande video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-placeholder {
+      font-size: .72rem;
+      color: rgba(111, 83, 107, .5);
+      padding: 0 6px;
+      text-align: center;
+    }
+
+    .fleche-media {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .9);
+      color: var(--mauve);
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .fleche-media.gauche { left: 2px; }
+    .fleche-media.droite { right: 2px; }
+
+    /* --- Résumé / total --- */
+    .resume-commande {
+      grid-column: 1 / -1;
+      display: grid;
+      gap: .4rem;
+      padding: 1rem 0;
+      border-top: 1px dashed var(--trait);
+      font-size: .95rem;
+    }
+
+    .resume-commande > div {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .resume-commande .total-final {
+      font-size: 1.1rem;
+      color: var(--mauve-fonce);
+      padding-top: .4rem;
+      border-top: 1px solid var(--trait);
+    }
+
+    .bouton-commande { grid-column: 1 / -1; justify-self: center; margin-top: .8rem; }
+
+    .commande-note {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: .85rem;
+      color: rgba(111, 83, 107, .65);
+      margin: 0;
+    }
+
+    .commande-confirmation {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: .95rem;
+      color: var(--mauve-fonce);
+      background: var(--rose-clair);
+      border-radius: 10px;
+      padding: .9rem 1rem;
+      margin: 0;
+      display: none;
+    }
+
+    .commande-confirmation.active { display: block; }
+
+    /* =====================================================
+       12. FOOTER
+    ===================================================== */
+    footer {
+      background: var(--mauve-fonce);
+      color: rgba(255, 248, 250, .72);
+      padding: 3.4rem 0 2.2rem;
+      font-size: .9rem;
+    }
+
+    footer .cols {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.4rem;
+      justify-content: space-between;
+    }
+
+    footer h4 {
+      font-family: var(--serif);
+      font-weight: 400;
+      color: var(--creme);
+      font-size: 1.05rem;
+      margin: 0 0 .7rem;
+    }
+
+    footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+    footer a { text-decoration: none; }
+    footer a:hover { color: var(--rose); }
+
+    .bas {
+      margin-top: 2.6rem;
+      padding-top: 1.3rem;
+      border-top: 1px solid rgba(255, 248, 250, .14);
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem 1.6rem;
+      justify-content: space-between;
+      font-size: .82rem;
+      color: rgba(255, 248, 250, .5);
+    }
+
+    .instagram-link { display: inline-flex; align-items: center; gap: 8px; }
+    .instagram-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .instagram-link:hover { color: var(--rose); }
+
+    /* =====================================================
+       13. RESPONSIVE
+    ===================================================== */
+    @media (max-width: 860px) {
+      .hero .enveloppe { grid-template-columns: 1fr; gap: 2.6rem; padding: 3.6rem 0 3.4rem; }
+      .visuel { order: -1; }
+      .visuel svg, .visuel img { width: min(260px, 62%); }
+    }
+
+    @media (max-width: 760px) {
+      .nav { display: none; }
+      .barre .enveloppe { min-height: 66px; }
+      .icone-recherche { margin-left: auto; }
+      .passepoil { padding: .7rem 1.2rem; font-size: .85rem; }
+      .matieres { grid-template-columns: 1fr; gap: 1.8rem; }
+      .heures { grid-template-columns: 1fr; }
+
+      .heure {
+        border-right: none;
+        border-bottom: 1px solid var(--trait);
+        padding: 1.6rem 0;
+      }
+      .heure:not(:first-child) { padding-left: 0; }
+      .heure:last-child { border-bottom: none; }
+
+      .grille { grid-template-columns: 1fr; gap: 2rem; }
+      .piece .fond { aspect-ratio: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .form-commande { grid-template-columns: 1fr; }
+
+      .champ:nth-child(4),
+      .bouton-commande,
+      .commande-note,
+      .commande-confirmation,
+      .resume-commande {
+        grid-column: auto;
+      }
+
+      .ligne-produit {
+        grid-template-columns: minmax(120px, 1fr) 80px 55px 35px;
+        gap: 5px;
+      }
+
+      .ligne-produit select,
+      .ligne-produit input { height: 44px; font-size: 12px; }
+      .ligne-produit select { padding: 0 5px; }
+
+      .supprimer-produit { width: 35px; height: 35px; font-size: 18px; }
+    }
+
+    @media (max-width: 480px) {
+      .passepoil { display: none; }
+      .bouton-commande.passepoil { display: inline-block; }
+      .marque { font-size: 1.3rem; }
+      .hero h1 { font-size: 2.7rem; }
+      .hero p.intro { font-size: 1rem; }
+
+      .bandeau .enveloppe {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem;
+        font-size: .78rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a class="saut" href="#contenu">Aller au contenu</a>
+
+  <!-- ===================================================
+       HEADER
+  ==================================================== -->
+  <header class="barre">
+    <div class="enveloppe">
+
+      <a class="marque" href="#">
+        <img src="hdiya.png" alt="Hdiya Gift Shop" class="logo-header">
+        <span>Hdiya Gift Shop</span>
+      </a>
+
+      <div class="boutons-header">
+        
+        <a class="passepoil" href="#collection">Voir la collection</a>
+        <a class="passepoil" href="#commande">Nous contacter</a>
+      </div>
+
+      <button type="button" class="icone-recherche" id="ouvrirRecherche" aria-label="Ouvrir la recherche">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.8" cy="10.8" r="6.8"></circle>
+          <path d="M16 16L21 21"></path>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ===================================================
+       BARRE DE RECHERCHE
+  ==================================================== -->
+  <div class="zone-recherche" id="zoneRecherche">
+    <div class="recherche-interne">
+      <input type="search" id="champRecherche" placeholder="Rechercher un produit..." aria-label="Rechercher un produit">
+      <button type="button" id="fermerRecherche" aria-label="Fermer la recherche">×</button>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       CONTENU
+  ==================================================== -->
+  <main id="contenu">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="enveloppe">
+        <div>
+          <p class="ligne-sup anim">Le confort pensé pour vos nuits</p>
+
+          <h1 class="anim d1">
+            Le vêtement que vous portez
+            <em>le plus longtemps</em>
+            chaque jour.
+          </h1>
+
+          <p class="intro anim d2">
+            Des pyjamas féminins élégants, doux et confortables, pensés pour
+            accompagner vos nuits et vos matinées.
+          </p>
+
+          <div class="hero-actions anim d3">
+            <a class="passepoil clair" href="#collection">Découvrir la collection</a>
+            <small>Livraison partout au Maroc · Paiement à la livraison</small>
+          </div>
+        </div>
+
+        <div class="visuel anim d2">
+          <img src="logo.png" alt="Pyjama Minuit Neuf" class="image-pyjama">
+        </div>
+      </div>
+    </div>
+
+    <!-- BANDEAU -->
+    <div class="bandeau">
+      <div class="enveloppe">
+        <span>Tissu confortable</span>
+        <span>Pyjama féminin</span>
+        <span>Du M au 2XL</span>
+        <span>Livraison partout au Maroc</span>
+      </div>
+    </div>
+
+   
+
+    <!-- COLLECTION -->
+<section id="collection">
+  <div class="enveloppe">
+
+    <h2>La collection</h2>
+
+    <p class="chapeau">
+      Découvrez nos modèles pensés pour le confort, le style et les moments de détente.
+    </p>
+
+    <div class="grille">
+
+      <!-- PRODUIT 1 -->
+      <article class="piece" data-product="Pyjama Bleu Ciel">
+
+        <div class="galerie-produit">
+
+          <button
+            type="button"
+            class="fleche-produit gauche"
+            aria-label="Image précédente"
+            onclick="changerMediaProduit(this, -1)"
+          >‹</button>
+
+          <div class="media-produit">
+            <img
+              src="chibii (1).jpeg"
+              alt="Pyjama Bleu Ciel"
+              class="media-actuelle"
+            >
+          </div>
+
+          <button
+            type="button"
+            class="fleche-produit droite"
+            aria-label="Image suivante"
+            onclick="changerMediaProduit(this, 1)"
+          >›</button>
+
+        </div>
+
+        <div class="titre">
+          <h3>Pyjama Bleu Ciel</h3>
+          <span class="prix">169 DH</span>
+        </div>
+
+        <div class="tailles-disponibles">
+          Tailles disponibles :
+          <strong>Chargement...</strong>
+        </div>
+
+        <p>
+          Coupe féminine, col raffiné et finitions délicates.
+        </p>
+
+      </article>
+
+
+      <!-- PRODUIT 2 -->
+      <article class="piece" data-product="Pyjama Jaune">
+
+        <div class="galerie-produit">
+
+          <button
+            type="button"
+            class="fleche-produit gauche"
+            aria-label="Image précédente"
+            onclick="changerMediaProduit(this, -1)"
+          >‹</button>
+
+          <div class="media-produit">
+            <img
+              src="sefra 1.jpeg"
+              alt="Pyjama Jaune"
+              class="media-actuelle"
+            >
+          </div>
+
+          <button
+            type="button"
+            class="fleche-produit droite"
+            aria-label="Image suivante"
+            onclick="changerMediaProduit(this, 1)"
+          >›</button>
+
+        </div>
+
+        <div class="titre">
+          <h3>Pyjama Jaune</h3>
+          <span class="prix">159 DH</span>
+        </div>
+
+        <div class="tailles-disponibles">
+          Tailles disponibles :
+          <strong>Chargement...</strong>
+        </div>
+
+        <p>
+           confortable, matière douce et taille agréable.
+        </p>
+
+      </article>
+
+
+      <!-- PRODUIT 3 -->
+      <article class="piece" data-product="Pyjama Rose">
+
+        <div class="galerie-produit">
+
+          <button
+            type="button"
+            class="fleche-produit gauche"
+            aria-label="Image précédente"
+            onclick="changerMediaProduit(this, -1)"
+          >‹</button>
+
+          <div class="media-produit">
+            <img
+              src="ROSE 2.jpeg"
+              alt="Pyjama Rose"
+              class="media-actuelle"
+            >
+          </div>
+
+          <button
+            type="button"
+            class="fleche-produit droite"
+            aria-label="Image suivante"
+            onclick="changerMediaProduit(this, 1)"
+          >›</button>
+
+        </div>
+
+        <div class="titre">
+          <h3>Pyjama Rose</h3>
+          <span class="prix">160 DH</span>
+        </div>
+
+        <div class="tailles-disponibles">
+          Tailles disponibles :
+          <strong>Chargement...</strong>
+        </div>
+
+        <p>
+          Coupe féminine, col ouvert et détails délicats.
+        </p>
+
+      </article>
+
+      <!-- PRODUIT 4 -->
+      <article class="piece" data-product="Pyjama Tournesol">
+
+        <div class="galerie-produit">
+
+          <button
+            type="button"
+            class="fleche-produit gauche"
+            aria-label="Image précédente"
+            onclick="changerMediaProduit(this, -1)"
+          >‹</button>
+
+          <div class="media-produit">
+            <img
+              src="sefra (1).jpeg"
+              alt="Pyjama Tournesol"
+              class="media-actuelle"
+            >
+          </div>
+
+          <button
+            type="button"
+            class="fleche-produit droite"
+            aria-label="Image suivante"
+            onclick="changerMediaProduit(this, 1)"
+          >›</button>
+
+        </div>
+
+        <div class="titre">
+          <h3>Pyjama Tournesol</h3>
+          <span class="prix">160 DH</span>
+        </div>
+
+        <div class="tailles-disponibles">
+          Tailles disponibles :
+          <strong>Chargement...</strong>
+        </div>
+
+        <p>
+          Silhouette féminine, col délicat et détails soigneusement travaillés.
+        </p>
+
+      </article>
+
+      <!-- PRODUIT 5 -->
+      <article class="piece" data-product="Pyjama Coeur">
+
+        <div class="galerie-produit">
+
+          <button
+            type="button"
+            class="fleche-produit gauche"
+            aria-label="Image précédente"
+            onclick="changerMediaProduit(this, -1)"
+          >‹</button>
+
+          <div class="media-produit">
+            <img
+              src="coeur 1.jpeg"
+              alt="Pyjama coeur"
+              class="media-actuelle"
+            >
+          </div>
+
+          <button
+            type="button"
+            class="fleche-produit droite"
+            aria-label="Image suivante"
+            onclick="changerMediaProduit(this, 1)"
+          >›</button>
+
+        </div>
+
+        <div class="titre">
+          <h3>Pyjama coeur</h3>
+          <span class="prix">150 DH</span>
+        </div>
+
+        <div class="tailles-disponibles">
+          Tailles disponibles :
+          <strong>Chargement...</strong>
+        </div>
+
+        <p>
+          Coupe douce, encolure raffinée et finitions délicates.
+        </p>
+
+      </article>
+
+
+      <!-- PRODUIT 6 -->
+      <article class="piece" data-product="Pyjama Rouge Blanche">
+
+        <div class="galerie-produit">
+
+          <button
+            type="button"
+            class="fleche-produit gauche"
+            aria-label="Image précédente"
+            onclick="changerMediaProduit(this, -1)"
+          >‹</button>
+
+          <div class="media-produit">
+            <img
+              src="Rouge 2.jpeg"
+              alt="Pyjama Rouge Blanche"
+              class="media-actuelle"
+            >
+          </div>
+
+          <button
+            type="button"
+            class="fleche-produit droite"
+            aria-label="Image suivante"
+            onclick="changerMediaProduit(this, 1)"
+          >›</button>
+
+        </div>
+
+        <div class="titre">
+          <h3>Pyjama Rouge Blanche</h3>
+          <span class="prix">150 DH</span>
+        </div>
+
+        <div class="tailles-disponibles">
+          Tailles disponibles :
+          <strong>Chargement...</strong>
+        </div>
+
+        <p>
+          Silhouette fluide, col délicat et finitions soignées..
+        </p>
+
+      </article>
+
+
+
+    </div>
+  </div>
+</section>
+
+    <!-- CITATION -->
+    <section class="citation">
+      <div class="enveloppe">
+        <blockquote>Le confort peut aussi être élégant.</blockquote>
+        <cite>Hdiya Gift Shop</cite>
+      </div>
+    </section>
+
+    <!-- COMMANDE -->
+    <section class="commande" id="commande">
+      <div class="enveloppe">
+
+        <h2>Finaliser votre commande</h2>
+        <p class="chapeau">
+          Remplissez vos informations et nous vous contacterons pour confirmer votre commande.
+        </p>
+
+        <form id="commandeForm" class="form-commande" novalidate>
+
+          <div class="champ">
+            <label for="nom">Nom complet <span>*</span></label>
+            <input type="text" id="nom" name="nom" placeholder="Votre nom complet" required minlength="2">
+          </div>
+
+          <div class="champ">
+            <label for="telephone">Téléphone <span>*</span></label>
+            <input
+              type="tel" id="telephone" name="telephone" placeholder="06 XX XX XX XX"
+              inputmode="numeric" maxlength="10" pattern="0[5-7][0-9]{8}" required
+            >
+            <small>Exemple : 0612345678</small>
+          </div>
+
+          <div class="champ">
+            <label for="ville">Ville <span>*</span></label>
+            <input type="text" id="ville" name="ville" placeholder="Rabat, Salé, Casablanca..." required minlength="2">
+          </div>
+
+          <div class="champ">
+            <label for="adresse">Adresse de livraison <span>*</span></label>
+            <textarea id="adresse" name="adresse" placeholder="Votre adresse complète" required minlength="5"></textarea>
+            <small>Adresse claire et précise</small>
+          </div>
+
+          <div class="champ">
+            
+            <label>Produits <span>*</span></label>
+
+            <div id="produitsCommande">
+              <div class="ligne-produit">
+                <select name="produit[]" class="select-produit" required onchange="actualiserProduit(this)">
+                  <option value="">Choisir un produit</option>
+                  <option value="Pyjama Bleu Ciel">Pyjama Bleu Ciel — 169 DH</option>
+                  <option value="Pyjama Jaune">Pyjama Jaune — 159 DH</option>
+                  <option value="Pyjama Rose">Pyjama Rose — 160 DH</option>
+                  <option value="Pyjama Tournesol">Pyjama Tournesol — 160 DH</option>
+                  <option value="Pyjama Coeur">Pyjama Coeur — 150 DH</option>
+                  <option value="Pyjama Rouge Blanche">Pyjama Rouge Blanche — 150 DH</option>
+                  
+                </select>
+
+                <select name="taille[]" class="select-taille" required disabled>
+                  <option value="">Taille</option>
+                </select>
+
+                <input
+  type="number"
+  name="quantite[]"
+  value="1"
+  min="1"
+  max="1"
+  step="1"
+  required
+  aria-label="Quantité"
+  oninput="limiterQuantite(this)"
+>
+
+                <button type="button" class="supprimer-produit" onclick="supprimerProduit(this)" aria-label="Supprimer le produit">×</button>
+              </div>
+            </div>
+
+            <button type="button" class="ajouter-produit" onclick="ajouterProduit()">+ Ajouter un produit</button>
+          </div>
+
+          <div class="champ">
+            <label for="commandeNote">Note <small>(facultatif)</small></label>
+            <textarea id="commandeNote" name="note" placeholder="Exprimer vos besoins"></textarea>
+          </div>
+
+          <div class="resume-commande">
+            <div><span>Sous-total</span><strong id="sousTotalCommande">0 DH</strong></div>
+            <div><span>Livraison</span><strong>25 DH</strong></div>
+            <div class="total-final"><span>Total</span><strong id="totalCommande">25 DH</strong></div>
+          </div>
+
+          <button type="submit" class="bouton-commande passepoil">Confirmer ma commande</button>
+
+          <p id="commandeConfirmation" class="commande-confirmation"></p>
+
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================
+       JAVASCRIPT
+  ==================================================== -->
+  <script>
+  (function () {
+    "use strict";
+
+    /* =================================================
+       1. CONFIGURATION
+    ================================================= */
+
+    const catalogueProduits = {
+
+      "Pyjama Bleu Ciel": {
+        prix: 169,
+        medias: [
+          { type: "image", src: "chibii (1).jpeg" },
+          { type: "image", src: "chibii (2).jpeg" },
+          { type: "image", src: "chibii (3).jpeg" },
+          { type: "image", src: "chibii (4).jpeg" }
+        ]
+      },
+
+      "Pyjama Jaune": {
+        prix: 159,
+        medias: [
+          { type: "image", src: "sefra 2.jpeg" },
+          { type: "image", src: "sefra 1.jpeg" }
+        ]
+      },
+
+      "Pyjama Rose": {
+        prix: 160,
+        medias: [
+          { type: "image", src: "rose 2.jpeg" },
+          { type: "image", src: "rose 1.png" }
+        ]
+      },
+
+      "Pyjama Tournesol": {
+        prix: 160,
+        medias: [
+          { type: "image", src: "sefra (1).jpeg" },
+          { type: "image", src: "sefra (2).jpeg" },
+          { type: "image", src: "sefra (3).jpeg" },
+          { type: "image", src: "sefra (4).jpeg" }
+        ]
+      },
+
+      "Pyjama Coeur": {
+        prix: 150,
+        medias: [
+          { type: "image", src: "coeur 2.jpeg" },
+          { type: "image", src: "coeur 1.jpeg" }
+        ]
+      },
+
+      /* NOTE : espaces en fin de nom retirées ici (elles cassaient
+         la correspondance avec data-product et avec le stock) */
+      "Pyjama Rouge Blanche": {
+        prix: 150,
+        medias: [
+          { type: "image", src: "Rouge 2.jpeg" },
+          { type: "image", src: "Rouge 1.jpeg" }
+        ]
+      },
+
+      
+
+    };
+
+    const fraisLivraison = 25;
+    const EMAIL_COMMANDES = "wafaebusinessacount@gmail.com";
+
+    // URL du Google Apps Script Web App (voir instructions fournies séparément)
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqNeA53lAZJKNRTxHTItLG3LMUI4OWIYOKOqNLe_5Cc4gyfu6m3nYHE4XE9j5cBWs/exec";
+
+    /* =================================================
+       2. RÉFÉRENCES DOM
+    ================================================= */
+
+    const commandeForm = document.getElementById("commandeForm");
+    const telephone = document.getElementById("telephone");
+    const commandeNote = document.getElementById("commandeNote");
+    const commandeConfirmation = document.getElementById("commandeConfirmation");
+    const produitsCommande = document.getElementById("produitsCommande");
+
+    const ouvrirRecherche = document.getElementById("ouvrirRecherche");
+    const fermerRecherche = document.getElementById("fermerRecherche");
+    const zoneRecherche = document.getElementById("zoneRecherche");
+    const champRecherche = document.getElementById("champRecherche");
+
+    /* =================================================
+       3. GABARITS HTML (options / galerie)
+    ================================================= */
+
+    function creerOptionsProduits() {
+      let html = '<option value="">Choisir un produit</option>';
+
+      Object.entries(catalogueProduits).forEach(([nom, produit]) => {
+        html += `<option value="${nom}">${nom} — ${produit.prix} DH</option>`;
+      });
+
+      return html;
+    }
+
+    
+
+    /* =================================================
+       4. GALERIE — FICHES PRODUIT (section collection)
+    ================================================= */
+
+    function afficherMediaProduit(article) {
+      const nomProduit = article.dataset.product;
+      const produit = catalogueProduits[nomProduit];
+
+      if (!produit || !produit.medias.length) return;
+
+      let index = parseInt(article.dataset.mediaIndex || "0", 10);
+
+      if (index < 0) index = 0;
+      if (index >= produit.medias.length) {
+        index = produit.medias.length - 1;
+      }
+
+      article.dataset.mediaIndex = index;
+
+      const media = produit.medias[index];
+      const zone = article.querySelector(".media-produit");
+
+      if (!zone) return;
+
+      if (media.type === "image") {
+        zone.innerHTML = `
+          <img
+            src="${media.src}"
+            alt="${nomProduit}"
+            class="media-actuelle"
+          >
+        `;
+      } else if (media.type === "video") {
+        zone.innerHTML = `
+          <video
+            src="${media.src}"
+            class="media-actuelle"
+            controls
+            playsinline
+            preload="metadata"
+          ></video>
+        `;
+      }
+
+      mettreAJourFlechesProduit(article);
+    }
+
+    function mettreAJourFlechesProduit(article) {
+      const produit = catalogueProduits[article.dataset.product];
+
+      if (!produit || !produit.medias) return;
+
+      const index = parseInt(article.dataset.mediaIndex || "0", 10);
+
+      const boutonGauche = article.querySelector(".fleche-produit.gauche");
+      const boutonDroite = article.querySelector(".fleche-produit.droite");
+
+      if (boutonGauche) {
+        boutonGauche.style.display = index === 0 ? "none" : "flex";
+      }
+
+      if (boutonDroite) {
+        boutonDroite.style.display =
+          index === produit.medias.length - 1 ? "none" : "flex";
+      }
+    }
+
+    function changerMediaProduit(bouton, direction) {
+      const article = bouton.closest(".piece");
+
+      if (!article) return;
+
+      const produit = catalogueProduits[article.dataset.product];
+
+      if (!produit || !produit.medias) return;
+
+      let index = parseInt(article.dataset.mediaIndex || "0", 10);
+
+      index += direction;
+
+      if (index < 0) {
+        index = 0;
+      }
+
+      if (index >= produit.medias.length) {
+        index = produit.medias.length - 1;
+      }
+
+      article.dataset.mediaIndex = index;
+
+      afficherMediaProduit(article);
+    }
+
+    /* =================================================
+       5. GALERIE — LIGNES DU FORMULAIRE
+    ================================================= */
+
+    function afficherMediaCommande(ligne) {
+      const selectProduit = ligne.querySelector('select[name="produit[]"]');
+      const zone = ligne.querySelector(".media-commande");
+      if (!selectProduit || !zone) return;
+
+      const produit = catalogueProduits[selectProduit.value];
+
+      if (!produit) {
+        zone.innerHTML = '<span class="media-placeholder">Choisir un produit</span>';
+        return;
+      }
+
+      let index = parseInt(ligne.dataset.mediaIndex || "0", 10);
+      if (index < 0) index = produit.medias.length - 1;
+      if (index >= produit.medias.length) index = 0;
+      ligne.dataset.mediaIndex = index;
+
+      const media = produit.medias[index];
+
+      if (media.type === "image") {
+        zone.innerHTML = `<img src="${media.src}" alt="${selectProduit.value}">`;
+      } else if (media.type === "video") {
+        zone.innerHTML = `<video src="${media.src}" controls playsinline preload="metadata"></video>`;
+      }
+    }
+
+    function changerMediaCommande(bouton, direction) {
+      const ligne = bouton.closest(".ligne-produit");
+      if (!ligne) return;
+
+      const selectProduit = ligne.querySelector('select[name="produit[]"]');
+      if (!selectProduit) return;
+
+      const produit = catalogueProduits[selectProduit.value];
+      if (!produit) return;
+
+      let index = parseInt(ligne.dataset.mediaIndex || "0", 10) + direction;
+      if (index >= produit.medias.length) index = 0;
+      if (index < 0) index = produit.medias.length - 1;
+
+      ligne.dataset.mediaIndex = index;
+      afficherMediaCommande(ligne);
+    }
+
+    /* =================================================
+       6. GESTION DU STOCK (nouveau)
+    ================================================= */
+
+    // Rempli après chargement : { "Pyjama Bleu Ciel": { "M": 5, "L": 0 }, ... }
+    let stockDisponible = {};
+    let stockCharge = false;
+
+    // Ordre d'affichage préféré ; toute taille inconnue de cette liste
+    // est simplement ajoutée à la fin, triée alphabétiquement.
+    const ORDRE_TAILLES = ["XS", "S", "M", "L", "XL", "XXL", "2XL", "3XL"];
+
+    function trierTailles(tailles) {
+      return tailles.slice().sort((a, b) => {
+        const ia = ORDRE_TAILLES.indexOf(a);
+        const ib = ORDRE_TAILLES.indexOf(b);
+        if (ia === -1 && ib === -1) return a.localeCompare(b);
+        if (ia === -1) return 1;
+        if (ib === -1) return -1;
+        return ia - ib;
+      });
+    }
+
+    // Seule source de vérité pour les tailles d'un produit : le stock.
+    // Tant que le stock n'est pas chargé, on renvoie null (= "pas encore su").
+    function taillesEnStockPour(produit) {
+  if (!stockCharge) {
+    return null;
+  }
+
+  const stockProduit = stockDisponible[produit];
+
+  if (!stockProduit) {
+    return [];
+  }
+
+  return Object.entries(stockProduit)
+    .filter(([taille, quantite]) => Number(quantite) > 0)
+    .map(([taille]) => taille);
+}
+
+    function chargerStock() {
+  return fetch(GOOGLE_SCRIPT_URL, {
+    method: "GET"
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      console.log("Réponse stock :", data);
+
+      // Accepte les deux formats :
+      // 1. [...]
+      // 2. { success: true, stock: [...] }
+      const lignes = Array.isArray(data)
+        ? data
+        : data.stock;
+
+      if (!Array.isArray(lignes)) {
+        throw new Error("Format de stock invalide.");
+      }
+
+      stockDisponible = {};
+
+      lignes.forEach((ligne) => {
+        const produit = String(ligne.produit || "").trim();
+        const taille = String(ligne.taille || "").trim();
+
+        const quantite = Number(ligne.quantite) || 0;
+
+        if (!produit || !taille) return;
+
+        if (!stockDisponible[produit]) {
+          stockDisponible[produit] = {};
+        }
+
+        stockDisponible[produit][taille] = quantite;
+      });
+
+      stockCharge = true;
+
+      console.log("Stock chargé :", stockDisponible);
+
+      appliquerStockSurLaPage();
+    })
+    .catch((erreur) => {
+      console.error("Impossible de charger le stock :", erreur);
+
+      stockCharge = false;
+
+      // Afficher l'erreur au lieu de rester bloqué sur "Chargement..."
+      document.querySelectorAll(".tailles-disponibles strong").forEach((element) => {
+        element.textContent = "Stock indisponible";
+      });
+    });
+}
+
+    function stockTotalProduit(nomProduit) {
+      const tailles = stockDisponible[nomProduit];
+      if (!tailles) return null; // pas d'info -> on ne bloque rien
+      return Object.values(tailles).reduce((a, b) => a + b, 0);
+    }
+   
+
+
+function actualiserMaximumQuantite(selectTaille) {
+  const ligne = selectTaille.closest(".ligne-produit");
+
+  const inputQuantite =
+    ligne.querySelector('input[name="quantite[]"]');
+
+  const option =
+    selectTaille.options[selectTaille.selectedIndex];
+
+  if (!option || !option.dataset.stock) {
+    inputQuantite.value = 1;
+    inputQuantite.min = 1;
+    inputQuantite.max = 1;
+    return;
+  }
+
+  const stock = Number(option.dataset.stock);
+
+  inputQuantite.min = 1;
+  inputQuantite.max = stock;
+
+  // Si la quantité actuelle dépasse le stock
+  if (Number(inputQuantite.value) > stock) {
+    inputQuantite.value = stock;
+  }
+
+  if (Number(inputQuantite.value) < 1) {
+    inputQuantite.value = 1;
+  }
+}
+function limiterQuantite(input) {
+
+  const max = Number(input.max);
+
+  let valeur = Number(input.value);
+
+  if (!Number.isFinite(valeur) || valeur < 1) {
+    input.value = 1;
+    calculerTotal();
+    return;
+  }
+
+  if (max > 0 && valeur > max) {
+    input.value = max;
+  }
+
+  calculerTotal();
+}
+
+
+    function appliquerStockSurLaPage() {
+      // 1. Cacher les fiches produit en rupture totale + retirer du menu déroulant
+      document.querySelectorAll(".piece").forEach((article) => {
+        const nom = article.dataset.product;
+        const total = stockTotalProduit(nom);
+        article.style.display = (total === 0) ? "none" : "";
+      });
+
+      document.querySelectorAll('select[name="produit[]"]').forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          if (!option.value) return;
+          const total = stockTotalProduit(option.value);
+          const produitInfo = catalogueProduits[option.value];
+          option.disabled = (total === 0);
+          option.textContent = (total === 0)
+            ? `${option.value} — Rupture de stock`
+            : `${option.value} — ${produitInfo.prix} DH`;
+        });
+      });
+
+      // 2. Rafraîchir les tailles déjà affichées dans le formulaire
+      document.querySelectorAll(".ligne-produit").forEach((ligne) => {
+        const select = ligne.querySelector('select[name="produit[]"]');
+        if (select && select.value) actualiserProduit(select);
+      });
+
+      // 3. Rafraîchir le texte "Tailles disponibles" sur chaque fiche produit
+      //    pour qu'il corresponde exactement au stock réel (même source que
+      //    le menu déroulant du formulaire) et non plus au texte figé du HTML.
+      mettreAJourTaillesAffichees();
+    }
+
+    function mettreAJourTaillesAffichees() {
+      document.querySelectorAll(".piece").forEach((article) => {
+        const nom = article.dataset.product;
+
+        const zoneTailles = article.querySelector(".tailles-disponibles");
+        const strong = zoneTailles ? zoneTailles.querySelector("strong") : null;
+        if (!strong) return;
+
+        const taillesDispo = taillesEnStockPour(nom);
+
+        if (taillesDispo === null) {
+          strong.textContent = "Chargement...";
+        } else if (taillesDispo.length === 0) {
+          // Ne devrait pas arriver ici (la fiche est déjà cachée si total = 0),
+          // mais on protège quand même l'affichage.
+          strong.textContent = "Rupture de stock";
+        } else {
+          strong.textContent = taillesDispo.join(" · ");
+        }
+      });
+    }
+
+    /* =================================================
+       7. GESTION DES LIGNES PRODUIT
+    ================================================= */
+
+    function actualiserProduit(selectProduit) {
+  const ligne = selectProduit.closest(".ligne-produit");
+
+  if (!ligne) return;
+
+  const selectTaille = ligne.querySelector('select[name="taille[]"]');
+  const inputQuantite = ligne.querySelector('input[name="quantite[]"]');
+
+  if (!selectTaille || !inputQuantite) return;
+
+  const nomProduit = selectProduit.value;
+  const produit = catalogueProduits[nomProduit];
+
+  const stockProduit = stockDisponible[nomProduit] || {};
+
+  // Garder la taille sélectionnée si elle existe encore
+  const tailleActuelle = selectTaille.value;
+
+  // Reset
+  selectTaille.innerHTML = '<option value="">Taille</option>';
+  selectTaille.disabled = true;
+
+  inputQuantite.value = 1;
+  inputQuantite.min = 1;
+  inputQuantite.max = 1;
+
+  ligne.dataset.mediaIndex = "0";
+
+  // Aucun produit
+  if (!nomProduit || !produit) {
+    afficherMediaCommande(ligne);
+    calculerTotal();
+    return;
+  }
+
+  // Stock pas encore chargé
+  if (!stockCharge) {
+    selectTaille.innerHTML =
+      '<option value="">Chargement...</option>';
+
+    selectTaille.disabled = true;
+
+    afficherMediaCommande(ligne);
+    calculerTotal();
+
+    return;
+  }
+
+  // Produit absent du stock
+  if (!stockProduit || Object.keys(stockProduit).length === 0) {
+    selectTaille.innerHTML =
+      '<option value="">Aucune taille disponible</option>';
+
+    selectTaille.disabled = true;
+
+    afficherMediaCommande(ligne);
+    calculerTotal();
+
+    return;
+  }
+
+  // Tailles disponibles selon le stock
+  const taillesDispo = trierTailles(
+    Object.entries(stockProduit)
+      .filter(([taille, quantite]) => Number(quantite) > 0)
+      .map(([taille]) => taille)
+  );
+
+  // Ajouter les tailles
+  taillesDispo.forEach((taille) => {
+
+    const quantiteStock = Number(stockProduit[taille]) || 0;
+
+    const option = document.createElement("option");
+
+    option.value = taille;
+
+    // ============================================
+    // IMPORTANT :
+    // Le client voit uniquement "M", "L", "XL"
+    // ============================================
+    option.textContent = taille;
+
+    // ============================================
+    // La quantité reste cachée pour le JavaScript
+    // ============================================
+    option.dataset.stock = quantiteStock;
+
+    selectTaille.appendChild(option);
+  });
+
+  // Restaurer la taille précédente
+  if (
+    tailleActuelle &&
+    taillesDispo.includes(tailleActuelle)
+  ) {
+    selectTaille.value = tailleActuelle;
+  }
+
+  // Activer / désactiver le choix de taille
+  selectTaille.disabled = taillesDispo.length === 0;
+
+  // Mettre à jour la quantité maximale
+  actualiserMaximumQuantite(selectTaille);
+
+  // Afficher la galerie
+  afficherMediaCommande(ligne);
+
+  // Recalculer le total
+  calculerTotal();
+}
+
+    function ajouterProduit() {
+      const ligne = document.createElement("div");
+      ligne.className = "ligne-produit";
+
+      ligne.innerHTML = `
+        <select name="produit[]" class="select-produit" required>
+          ${creerOptionsProduits()}
+        </select>
+
+       
+
+        <select name="taille[]" class="select-taille" required disabled>
+          <option value="">Taille</option>
+        </select>
+
+        <input
+  type="number"
+  name="quantite[]"
+  value="1"
+  min="1"
+  max="1"
+  step="1"
+  required
+  aria-label="Quantité"
+  oninput="limiterQuantite(this)"
+>
+
+        <button type="button" class="supprimer-produit" onclick="supprimerProduit(this)" aria-label="Supprimer le produit">×</button>
+      `;
+
+      produitsCommande.appendChild(ligne);
+
+      ligne.querySelector('select[name="produit[]"]')
+        .addEventListener("change", function () { actualiserProduit(this); });
+
+      appliquerStockSurLaPage();
+      calculerTotal();
+    }
+
+    function supprimerProduit(bouton) {
+      const lignes = document.querySelectorAll(".ligne-produit");
+      if (lignes.length <= 1) return;
+
+      bouton.closest(".ligne-produit").remove();
+      calculerTotal();
+    }
+
+    /* =================================================
+       8. CALCUL DU TOTAL
+    ================================================= */
+
+    function calculerTotal() {
+      let sousTotal = 0;
+
+      document.querySelectorAll(".ligne-produit").forEach((ligne) => {
+        const select = ligne.querySelector('select[name="produit[]"]');
+        const quantiteInput = ligne.querySelector('input[name="quantite[]"]');
+        if (!select || !quantiteInput) return;
+
+        const produit = catalogueProduits[select.value];
+        const quantite = parseInt(quantiteInput.value, 10) || 0;
+
+        if (produit) {
+          sousTotal += produit.prix * quantite;
+        }
+      });
+
+      const total = sousTotal + fraisLivraison;
+
+      const sousTotalElement = document.getElementById("sousTotalCommande");
+      const totalElement = document.getElementById("totalCommande");
+
+      if (sousTotalElement) sousTotalElement.textContent = sousTotal + " DH";
+      if (totalElement) totalElement.textContent = total + " DH";
+    }
+
+    document.querySelectorAll(".piece").forEach((article) => {
+      article.dataset.mediaIndex = "0";
+      afficherMediaProduit(article);
+    });
+
+    /* =================================================
+       9. TÉLÉPHONE (filtrage des chiffres)
+    ================================================= */
+
+    if (telephone) {
+      telephone.addEventListener("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, "").slice(0, 10);
+      });
+    }
+
+    /* =================================================
+       10. ÉVÉNEMENTS DÉLÉGUÉS (produit / quantité)
+    ================================================= */
+
+    document.addEventListener("change", function (event) {
+
+  // Changement de produit
+  if (event.target.matches('select[name="produit[]"]')) {
+    actualiserProduit(event.target);
+    return;
+  }
+
+  // Changement de taille
+  if (event.target.matches('select[name="taille[]"]')) {
+    actualiserMaximumQuantite(event.target);
+    calculerTotal();
+    return;
+  }
+
+  // Changement de quantité
+  if (event.target.matches('input[name="quantite[]"]')) {
+    limiterQuantite(event.target);
+    calculerTotal();
+  }
+});
+
+    document.addEventListener("input", function (event) {
+      if (event.target.matches('input[name="quantite[]"]')) {
+        calculerTotal();
+      }
+    });
+
+    /* =================================================
+       11. RECHERCHE
+    ================================================= */
+
+    if (ouvrirRecherche && fermerRecherche && zoneRecherche && champRecherche) {
+      const cartesProduits = document.querySelectorAll(".piece");
+
+      ouvrirRecherche.addEventListener("click", function () {
+        zoneRecherche.classList.add("active");
+        setTimeout(() => champRecherche.focus(), 100);
+      });
+
+      fermerRecherche.addEventListener("click", function () {
+        zoneRecherche.classList.remove("active");
+        champRecherche.value = "";
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          zoneRecherche.classList.remove("active");
+          champRecherche.value = "";
+        }
+      });
+
+      champRecherche.addEventListener("input", function () {
+        const recherche = champRecherche.value.toLowerCase().trim();
+
+        cartesProduits.forEach((produit) => {
+          const nom = produit.dataset.product.toLowerCase();
+          const correspond = (recherche === "" || nom.includes(recherche));
+          const enRupture = stockTotalProduit(produit.dataset.product) === 0;
+          produit.style.display = (correspond && !enRupture) ? "" : "none";
+        });
+      });
+    }
+
+    /* =================================================
+       12. CLIC SUR UNE FICHE PRODUIT
+       -> sélectionne le produit dans le formulaire
+    ================================================= */
+
+    document.querySelectorAll(".piece").forEach((produit) => {
+      produit.addEventListener("click", function (event) {
+        if (event.target.closest(".fleche-produit") || event.target.closest("video")) {
+          return;
+        }
+
+        const selectProduit = document.querySelector('#produitsCommande select[name="produit[]"]');
+        if (!selectProduit) return;
+
+        selectProduit.value = produit.dataset.product;
+        actualiserProduit(selectProduit);
+
+        document.getElementById("commande").scrollIntoView({ behavior: "smooth" });
+      });
+    });
+
+    /* =================================================
+       13. INITIALISATION DES LIGNES EXISTANTES
+    ================================================= */
+
+    document.querySelectorAll(".ligne-produit").forEach((ligne) => {
+      const select = ligne.querySelector('select[name="produit[]"]');
+      if (!select) return;
+
+      select.addEventListener("change", function () { actualiserProduit(this); });
+    });
+
+    /* =================================================
+       14. ENVOI VERS GOOGLE SHEETS (vérifie + décrémente le stock)
+    ================================================= */
+
+    function envoyerVersGoogleSheets(commande, infosClient, sousTotal, total, note) {
+      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.indexOf("COLLE_ICI") !== -1) {
+        console.warn("GOOGLE_SCRIPT_URL non configurée : commande non envoyée à Google Sheets.");
+        return Promise.resolve({ success: true, ignore: true });
+      }
+
+      const donneesSheet = {
+        nom: infosClient.nom,
+        telephone: infosClient.telephone,
+        ville: infosClient.ville,
+        adresse: infosClient.adresse,
+        produits: commande, // tableau brut [{produit, taille, quantite, montant}, ...]
+        sousTotal: sousTotal,
+        livraison: fraisLivraison,
+        total: total,
+        note: note
+      };
+
+      // Content-Type text/plain volontaire : évite le preflight CORS
+      // qu'Apps Script ne gère pas nativement.
+      return fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(donneesSheet)
+      })
+        .then((r) => r.json())
+        .catch((erreur) => {
+          console.warn("Échec de l'envoi vers Google Sheets :", erreur);
+          // Si Sheets est injoignable, on considère que l'on ne peut pas
+          // garantir le stock : on bloque la commande par sécurité.
+          return { success: false, error: "Impossible de vérifier le stock pour le moment." };
+        });
+    }
+
+    /* =================================================
+       15. ENVOI DE LA COMMANDE
+    ================================================= */
+
+    commandeForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (!commandeForm.checkValidity()) {
+        commandeForm.reportValidity();
+        return;
+      }
+
+      const numero = telephone.value.trim();
+      if (!/^0[5-7][0-9]{8}$/.test(numero)) {
+        telephone.setCustomValidity("Veuillez entrer un numéro marocain valide à 10 chiffres.");
+        telephone.reportValidity();
+        telephone.setCustomValidity("");
+        return;
+      }
+
+      const lignes = document.querySelectorAll(".ligne-produit");
+      const commande = [];
+      let sousTotal = 0;
+
+      if (!stockCharge) {
+        alert("Le stock est en cours de chargement, merci de patienter un instant puis de réessayer.");
+        return;
+      }
+
+      for (const ligne of lignes) {
+        const nomProduit = ligne.querySelector('select[name="produit[]"]').value;
+        const taille = ligne.querySelector('select[name="taille[]"]').value;
+        const quantite = parseInt(ligne.querySelector('input[name="quantite[]"]').value, 10);
+        const produit = catalogueProduits[nomProduit];
+        const taillesDispo = taillesEnStockPour(nomProduit) || [];
+
+        if (!produit || !taillesDispo.includes(taille) || !Number.isInteger(quantite) || quantite < 1) {
+          alert("Veuillez vérifier le produit, la taille et la quantité.");
+          return;
+        }
+
+        const montant = produit.prix * quantite;
+        sousTotal += montant;
+
+        commande.push({ produit: nomProduit, taille, quantite, montant });
+      }
+
+      const total = sousTotal + fraisLivraison;
+
+      const infosClient = {
+        nom: document.getElementById("nom").value,
+        telephone: telephone.value,
+        ville: document.getElementById("ville").value,
+        adresse: document.getElementById("adresse").value
+      };
+
+      const note = commandeNote ? commandeNote.value.trim() : "";
+
+      const bouton = commandeForm.querySelector(".bouton-commande");
+      bouton.textContent = "Vérification du stock...";
+      bouton.disabled = true;
+
+      // 1. On vérifie ET décrémente le stock côté serveur (Apps Script).
+      //    Si ça échoue (stock insuffisant), on n'envoie PAS l'email.
+      envoyerVersGoogleSheets(commande, infosClient, sousTotal, total, note)
+        .then((resultatStock) => {
+          if (!resultatStock.success) {
+            bouton.textContent = "Confirmer ma commande";
+            bouton.disabled = false;
+            alert(resultatStock.error || "Stock insuffisant pour un des produits. Merci de réessayer.");
+            chargerStock(); // pour rafraîchir l'affichage avec les quantités réelles
+            return;
+          }
+
+          // 2. Stock OK -> résumé texte pour l'e-mail
+          let resumeCommande = "NOUVELLE COMMANDE — PYJAMA LUX\n\n";
+          resumeCommande += "Client : " + infosClient.nom + "\n";
+          resumeCommande += "Téléphone : " + infosClient.telephone + "\n";
+          resumeCommande += "Ville : " + infosClient.ville + "\n";
+          resumeCommande += "Adresse : " + infosClient.adresse + "\n\n";
+          resumeCommande += "PRODUITS :\n";
+
+          commande.forEach((item, index) => {
+            resumeCommande += `${index + 1}. ${item.produit} | Taille : ${item.taille} | Quantité : ${item.quantite} | ${item.montant} DH\n`;
+          });
+
+          resumeCommande += "\nSous-total : " + sousTotal + " DH\n";
+          resumeCommande += "Livraison : " + fraisLivraison + " DH\n";
+          resumeCommande += "TOTAL À PAYER : " + total + " DH";
+
+          if (note) {
+            resumeCommande += "\n\nNote du client :\n" + note;
+          }
+
+          const donnees = new FormData(commandeForm);
+          donnees.append("_subject", "Nouvelle commande — Pyjama Lux");
+          donnees.append("_template", "table");
+          donnees.append("_captcha", "false");
+          donnees.append("Résumé de la commande", resumeCommande);
+          donnees.append("Sous-total", sousTotal + " DH");
+          donnees.append("Livraison", fraisLivraison + " DH");
+          donnees.append("Total à payer", total + " DH");
+
+          bouton.textContent = "Envoi en cours...";
+
+          fetch("https://formsubmit.co/ajax/" + EMAIL_COMMANDES, {
+            method: "POST",
+            headers: { "Accept": "application/json" },
+            body: donnees
+          })
+            .then((reponse) => {
+              if (!reponse.ok) throw new Error("Erreur serveur");
+              return reponse.json();
+            })
+            .then((data) => {
+              if (data.success !== true && data.success !== "true") {
+                throw new Error("Envoi refusé");
+              }
+
+              bouton.textContent = "Commande envoyée ✓";
+              bouton.disabled = false;
+
+              commandeConfirmation.innerHTML = `
+                <strong>Merci ! Votre commande a bien été envoyée.</strong>
+                <br><br>
+                Total à payer : <strong>${total} DH</strong>
+              `;
+              commandeConfirmation.classList.add("active");
+
+              // Réinitialisation du formulaire
+              commandeForm.reset();
+
+              produitsCommande.querySelectorAll(".ligne-produit").forEach((ligne, index) => {
+                if (index > 0) ligne.remove();
+              });
+
+              const premiereLigne = produitsCommande.querySelector(".ligne-produit");
+              if (premiereLigne) {
+                const selectProduit = premiereLigne.querySelector('select[name="produit[]"]');
+                const selectTaille = premiereLigne.querySelector('select[name="taille[]"]');
+
+                selectProduit.value = "";
+                selectTaille.innerHTML = '<option value="">Taille</option>';
+                selectTaille.disabled = true;
+                premiereLigne.dataset.mediaIndex = "0";
+
+                const zone = premiereLigne.querySelector(".media-commande");
+                if (zone) {
+                  zone.innerHTML = '<span class="media-placeholder">Choisir un produit</span>';
+                }
+              }
+
+              calculerTotal();
+              commandeConfirmation.scrollIntoView({ behavior: "smooth", block: "center" });
+
+              // Le stock vient d'être décrémenté côté serveur -> on rafraîchit l'affichage
+              chargerStock();
+            })
+            .catch(() => {
+              bouton.textContent = "Confirmer ma commande";
+              bouton.disabled = false;
+              alert("Le stock a bien été réservé, mais l'envoi de l'e-mail a échoué. Contactez-nous pour confirmer votre commande.");
+            });
+        });
+    });
+
+    /* =================================================
+       16. PREMIER CALCUL + CHARGEMENT DU STOCK AU DÉMARRAGE
+    ================================================= */
+
+    calculerTotal();
+    chargerStock();
+
+    // Exposer les fonctions utilisées via onclick="" inline dans le HTML
+    window.changerMediaProduit = changerMediaProduit;
+    window.changerMediaCommande = changerMediaCommande;
+    window.actualiserProduit = actualiserProduit;
+    window.ajouterProduit = ajouterProduit;
+    window.supprimerProduit = supprimerProduit;
+
+  })();
+  </script>
+
+</body>
+</html>
